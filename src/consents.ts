@@ -11,7 +11,7 @@ export class ConsentsService {
   async getConsentStatus(consentId: string): Promise<string> {
     const response = await this.client
       .getGotInstance()
-      .get(`v3/consents/${consentId}/status`)
+      .get(`v3/consents/${consentId}`)
       .json<{ consentStatus: string }>();
     return response.consentStatus;
   }

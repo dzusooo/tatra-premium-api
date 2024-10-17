@@ -11,7 +11,7 @@ class ConsentsService {
     async getConsentStatus(consentId) {
         const response = await this.client
             .getGotInstance()
-            .get(`v3/consents/${consentId}/status`)
+            .get(`v3/consents/${consentId}`)
             .json();
         return response.consentStatus;
     }
