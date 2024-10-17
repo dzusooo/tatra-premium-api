@@ -11,6 +11,7 @@ export class TatraPremiumApiClient {
   private accessToken: string | null = null;
   private refreshToken: string | null = null;
   private tokenExpiresAt: number | null = null;
+  private proxyUrl: string | undefined;
 
   constructor(
     clientId: string,
@@ -26,18 +27,19 @@ export class TatraPremiumApiClient {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri;
+    this.proxyUrl = proxyUrl;
 
     this.gotInstance = got.extend({
       prefixUrl: this.baseURL,
       agent: {
-        ...(proxyUrl && {
+        ...(this.proxyUrl && {
           https: new HttpsProxyAgent({
             keepAlive: false,
-            proxy: proxyUrl,
+            proxy: this.proxyUrl,
           }),
         }),
       },
-      rejectUnauthorized: !proxyUrl,
+      rejectUnauthorized: !this.proxyUrl,
       hooks: {
         beforeRequest: [
           async (request) => {
@@ -69,6 +71,15 @@ export class TatraPremiumApiClient {
     const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
     const response = await got
       .post(tokenUrl, {
+        agent: {
+          ...(this.proxyUrl && {
+            https: new HttpsProxyAgent({
+              keepAlive: false,
+              proxy: this.proxyUrl,
+            }),
+          }),
+        },
+        rejectUnauthorized: !this.proxyUrl,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -96,6 +107,15 @@ export class TatraPremiumApiClient {
     const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
     const response = await got
       .post(tokenUrl, {
+        agent: {
+          ...(this.proxyUrl && {
+            https: new HttpsProxyAgent({
+              keepAlive: false,
+              proxy: this.proxyUrl,
+            }),
+          }),
+        },
+        rejectUnauthorized: !this.proxyUrl,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           Authorization: `Basic ${Buffer.from(
@@ -174,6 +194,15 @@ export class TatraPremiumApiClient {
     const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
     const response = await got
       .post(tokenUrl, {
+        agent: {
+          ...(this.proxyUrl && {
+            https: new HttpsProxyAgent({
+              keepAlive: false,
+              proxy: this.proxyUrl,
+            }),
+          }),
+        },
+        rejectUnauthorized: !this.proxyUrl,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           Authorization: `Basic ${Buffer.from(

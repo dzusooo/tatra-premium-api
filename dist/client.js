@@ -41,17 +41,18 @@ class TatraPremiumApiClient {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
+        this.proxyUrl = proxyUrl;
         this.gotInstance = got_1.default.extend({
             prefixUrl: this.baseURL,
             agent: {
-                ...(proxyUrl && {
+                ...(this.proxyUrl && {
                     https: new hpagent_1.HttpsProxyAgent({
                         keepAlive: false,
-                        proxy: proxyUrl,
+                        proxy: this.proxyUrl,
                     }),
                 }),
             },
-            rejectUnauthorized: !proxyUrl,
+            rejectUnauthorized: !this.proxyUrl,
             hooks: {
                 beforeRequest: [
                     async (request) => {
@@ -79,6 +80,15 @@ class TatraPremiumApiClient {
         const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
         const response = await got_1.default
             .post(tokenUrl, {
+            agent: {
+                ...(this.proxyUrl && {
+                    https: new hpagent_1.HttpsProxyAgent({
+                        keepAlive: false,
+                        proxy: this.proxyUrl,
+                    }),
+                }),
+            },
+            rejectUnauthorized: !this.proxyUrl,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
@@ -100,6 +110,15 @@ class TatraPremiumApiClient {
         const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
         const response = await got_1.default
             .post(tokenUrl, {
+            agent: {
+                ...(this.proxyUrl && {
+                    https: new hpagent_1.HttpsProxyAgent({
+                        keepAlive: false,
+                        proxy: this.proxyUrl,
+                    }),
+                }),
+            },
+            rejectUnauthorized: !this.proxyUrl,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 Authorization: `Basic ${Buffer.from(`${this.clientId}:${this.clientSecret}`).toString("base64")}`,
@@ -149,6 +168,15 @@ class TatraPremiumApiClient {
         const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
         const response = await got_1.default
             .post(tokenUrl, {
+            agent: {
+                ...(this.proxyUrl && {
+                    https: new hpagent_1.HttpsProxyAgent({
+                        keepAlive: false,
+                        proxy: this.proxyUrl,
+                    }),
+                }),
+            },
+            rejectUnauthorized: !this.proxyUrl,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 Authorization: `Basic ${Buffer.from(`${this.clientId}:${this.clientSecret}`).toString("base64")}`,
