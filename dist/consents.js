@@ -6,17 +6,17 @@ class ConsentsService {
         this.client = client;
     }
     async createConsent() {
-        return this.client.getKyInstance().post("v3/consents").json();
+        return this.client.getGotInstance().post("v3/consents").json();
     }
     async getConsentStatus(consentId) {
         const response = await this.client
-            .getKyInstance()
+            .getGotInstance()
             .get(`v3/consents/${consentId}/status`)
             .json();
         return response.consentStatus;
     }
     async deleteConsent(consentId) {
-        await this.client.getKyInstance().delete(`v3/consents/${consentId}`);
+        await this.client.getGotInstance().delete(`v3/consents/${consentId}`);
     }
 }
 exports.ConsentsService = ConsentsService;

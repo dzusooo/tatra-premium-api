@@ -179,7 +179,7 @@ const statement = await statementsService.getStatement(
 
 ## Error Handling
 
-The SDK uses `ky` for HTTP requests, which throws errors for non-2xx responses. You should wrap your API calls in try-catch blocks to handle potential errors:
+The SDK uses `got` for HTTP requests, which throws errors for non-2xx responses. You should wrap your API calls in try-catch blocks to handle potential errors:
 
 ```typescript
 try {
@@ -187,11 +187,7 @@ try {
   console.log(accounts);
 } catch (error) {
   if (error.name === "HTTPError") {
-    console.error(
-      "HTTP Error:",
-      error.response.status,
-      await error.response.text()
-    );
+    console.error("HTTP Error:", error.response.status, error.response.body);
   } else {
     console.error("Unexpected error:", error);
   }

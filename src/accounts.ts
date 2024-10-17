@@ -6,7 +6,7 @@ export class AccountsService {
 
   async getAccounts(): Promise<Account[]> {
     const response = await this.client
-      .getKyInstance()
+      .getGotInstance()
       .get("v3/accounts")
       .json<{ accounts: Account[] }>();
     return response.accounts;
@@ -14,7 +14,7 @@ export class AccountsService {
 
   async getAccountDetails(accountId: string): Promise<Account> {
     const response = await this.client
-      .getKyInstance()
+      .getGotInstance()
       .get(`v3/accounts/${accountId}`)
       .json<{ account: Account }>();
     return response.account;
@@ -22,7 +22,7 @@ export class AccountsService {
 
   async getAccountBalances(accountId: string): Promise<Balance[]> {
     const response = await this.client
-      .getKyInstance()
+      .getGotInstance()
       .get(`v3/accounts/${accountId}/balances`)
       .json<{ balances: Balance[] }>();
     return response.balances;
@@ -34,7 +34,7 @@ export class AccountsService {
     dateTo?: string
   ): Promise<Transaction[]> {
     const response = await this.client
-      .getKyInstance()
+      .getGotInstance()
       .get(`v5/accounts/${accountId}/transactions`, {
         searchParams: {
           ...(dateFrom && { dateFrom }),

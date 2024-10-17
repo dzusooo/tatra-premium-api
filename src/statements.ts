@@ -10,7 +10,7 @@ export class StatementsService {
     dateTo: string
   ): Promise<StatementTask> {
     return this.client
-      .getKyInstance()
+      .getGotInstance()
       .post(`v1/accounts/${accountId}/statements/tasks`, {
         json: { dateFrom, dateTo },
       })
@@ -22,7 +22,7 @@ export class StatementsService {
     taskId: string
   ): Promise<any> {
     return this.client
-      .getKyInstance()
+      .getGotInstance()
       .get(`v1/accounts/${accountId}/statements/tasks/${taskId}`)
       .json();
   }
@@ -32,8 +32,8 @@ export class StatementsService {
     statementId: string
   ): Promise<ArrayBuffer> {
     return this.client
-      .getKyInstance()
+      .getGotInstance()
       .get(`v1/accounts/${accountId}/statements/${statementId}`)
-      .arrayBuffer();
+      .buffer();
   }
 }

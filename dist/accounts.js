@@ -7,28 +7,28 @@ class AccountsService {
     }
     async getAccounts() {
         const response = await this.client
-            .getKyInstance()
+            .getGotInstance()
             .get("v3/accounts")
             .json();
         return response.accounts;
     }
     async getAccountDetails(accountId) {
         const response = await this.client
-            .getKyInstance()
+            .getGotInstance()
             .get(`v3/accounts/${accountId}`)
             .json();
         return response.account;
     }
     async getAccountBalances(accountId) {
         const response = await this.client
-            .getKyInstance()
+            .getGotInstance()
             .get(`v3/accounts/${accountId}/balances`)
             .json();
         return response.balances;
     }
     async getAccountTransactions(accountId, dateFrom, dateTo) {
         const response = await this.client
-            .getKyInstance()
+            .getGotInstance()
             .get(`v5/accounts/${accountId}/transactions`, {
             searchParams: {
                 ...(dateFrom && { dateFrom }),

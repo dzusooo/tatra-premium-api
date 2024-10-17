@@ -1,6 +1,6 @@
-import ky from "ky";
+import got from "got";
 export declare class TatraPremiumApiClient {
-    private kyInstance;
+    private gotInstance;
     private baseURL;
     private clientId;
     private clientSecret;
@@ -15,5 +15,5 @@ export declare class TatraPremiumApiClient {
     getAuthorizationUrl(state: string, codeVerifier: string): string;
     private generateCodeChallenge;
     exchangeAuthorizationCode(code: string, codeVerifier: string): Promise<void>;
-    getKyInstance(): typeof ky;
+    getGotInstance(): typeof got;
 }

@@ -1,8 +1,8 @@
-import ky from "ky";
-import { createHash } from "crypto";
+import got from "got";
+import { createHash, randomUUID } from "crypto";
 
 export class TatraPremiumApiClient {
-  private kyInstance: typeof ky;
+  private gotInstance: typeof got;
   private baseURL: string;
   private clientId: string;
   private clientSecret: string;
@@ -20,15 +20,22 @@ export class TatraPremiumApiClient {
     this.baseURL = useSandbox
       ? "https://api.tatrabanka.sk/premium/sandbox"
       : "https://api.tatrabanka.sk/premium/production";
+
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri;
-    this.kyInstance = ky.create({
+
+    this.gotInstance = got.extend({
       prefixUrl: this.baseURL,
       hooks: {
         beforeRequest: [
           async (request) => {
             await this.ensureValidToken();
+
+            // @ts-expect-error - TS doesn't know about set method
+            request.headers.set("x-request-id", randomUUID());
+
+            // @ts-expect-error - TS doesn't know about set method
             request.headers.set("Authorization", `Bearer ${this.accessToken}`);
           },
         ],
@@ -52,17 +59,17 @@ export class TatraPremiumApiClient {
 
   private async getClientCredentialsToken() {
     const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
-    const response = await ky
+    const response = await got
       .post(tokenUrl, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams({
+        form: {
           client_id: this.clientId,
           client_secret: this.clientSecret,
           grant_type: "client_credentials",
           scope: "PREMIUM_AIS",
-        }),
+        },
       })
       .json<{
         access_token: string;
@@ -79,7 +86,7 @@ export class TatraPremiumApiClient {
     }
 
     const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
-    const response = await ky
+    const response = await got
       .post(tokenUrl, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -87,10 +94,10 @@ export class TatraPremiumApiClient {
             `${this.clientId}:${this.clientSecret}`
           ).toString("base64")}`,
         },
-        body: new URLSearchParams({
+        form: {
           grant_type: "refresh_token",
           refresh_token: this.refreshToken,
-        }),
+        },
       })
       .json<{
         access_token: string;
@@ -132,7 +139,7 @@ export class TatraPremiumApiClient {
     codeVerifier: string
   ): Promise<void> {
     const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
-    const response = await ky
+    const response = await got
       .post(tokenUrl, {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -140,13 +147,13 @@ export class TatraPremiumApiClient {
             `${this.clientId}:${this.clientSecret}`
           ).toString("base64")}`,
         },
-        body: new URLSearchParams({
+        form: {
           code: code,
           grant_type: "authorization_code",
           redirect_uri: this.redirectUri,
           scope: "PREMIUM_AIS",
           code_verifier: codeVerifier,
-        }),
+        },
       })
       .json<{
         access_token: string;
@@ -159,7 +166,7 @@ export class TatraPremiumApiClient {
     this.tokenExpiresAt = Date.now() + response.expires_in * 1000;
   }
 
-  public getKyInstance(): typeof ky {
-    return this.kyInstance;
+  public getGotInstance(): typeof got {
+    return this.gotInstance;
   }
 }

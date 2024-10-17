@@ -7,7 +7,7 @@ class StatementsService {
     }
     async createStatementTask(accountId, dateFrom, dateTo) {
         return this.client
-            .getKyInstance()
+            .getGotInstance()
             .post(`v1/accounts/${accountId}/statements/tasks`, {
             json: { dateFrom, dateTo },
         })
@@ -15,15 +15,15 @@ class StatementsService {
     }
     async getStatementTaskStatus(accountId, taskId) {
         return this.client
-            .getKyInstance()
+            .getGotInstance()
             .get(`v1/accounts/${accountId}/statements/tasks/${taskId}`)
             .json();
     }
     async getStatement(accountId, statementId) {
         return this.client
-            .getKyInstance()
+            .getGotInstance()
             .get(`v1/accounts/${accountId}/statements/${statementId}`)
-            .arrayBuffer();
+            .buffer();
     }
 }
 exports.StatementsService = StatementsService;
