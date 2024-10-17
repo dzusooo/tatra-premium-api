@@ -14,6 +14,12 @@ export declare class TatraPremiumApiClient {
     private refreshAccessToken;
     getAuthorizationUrl(state: string, codeVerifier: string, consentId?: string): string;
     private generateCodeChallenge;
-    exchangeAuthorizationCode(code: string, codeVerifier: string): Promise<void>;
+    exchangeAuthorizationCode(code: string, codeVerifier: string): Promise<{
+        accessToken: string;
+        refreshToken: string;
+        tokenExpiresAt: Date;
+    }>;
     getGotInstance(): typeof got;
+    setAccessToken(accessToken: string, expiresAt: Date): void;
+    setRefreshToken(refreshToken: string): void;
 }

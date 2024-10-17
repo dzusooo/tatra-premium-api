@@ -122,9 +122,21 @@ class TatraPremiumApiClient {
         this.accessToken = response.access_token;
         this.refreshToken = response.refresh_token;
         this.tokenExpiresAt = Date.now() + response.expires_in * 1000;
+        return {
+            accessToken: this.accessToken,
+            refreshToken: this.refreshToken,
+            tokenExpiresAt: new Date(this.tokenExpiresAt),
+        };
     }
     getGotInstance() {
         return this.gotInstance;
+    }
+    setAccessToken(accessToken, expiresAt) {
+        this.accessToken = accessToken;
+        this.tokenExpiresAt = expiresAt.getTime();
+    }
+    setRefreshToken(refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
 exports.TatraPremiumApiClient = TatraPremiumApiClient;

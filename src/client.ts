@@ -138,7 +138,11 @@ export class TatraPremiumApiClient {
   public async exchangeAuthorizationCode(
     code: string,
     codeVerifier: string
-  ): Promise<void> {
+  ): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    tokenExpiresAt: Date;
+  }> {
     const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
     const response = await got
       .post(tokenUrl, {
@@ -165,9 +169,24 @@ export class TatraPremiumApiClient {
     this.accessToken = response.access_token;
     this.refreshToken = response.refresh_token;
     this.tokenExpiresAt = Date.now() + response.expires_in * 1000;
+
+    return {
+      accessToken: this.accessToken,
+      refreshToken: this.refreshToken,
+      tokenExpiresAt: new Date(this.tokenExpiresAt),
+    };
   }
 
   public getGotInstance(): typeof got {
     return this.gotInstance;
+  }
+
+  public setAccessToken(accessToken: string, expiresAt: Date) {
+    this.accessToken = accessToken;
+    this.tokenExpiresAt = expiresAt.getTime();
+  }
+
+  public setRefreshToken(refreshToken: string) {
+    this.refreshToken = refreshToken;
   }
 }
