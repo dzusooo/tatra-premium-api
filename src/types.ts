@@ -1,15 +1,21 @@
 export interface Account {
-  accountId: string;
-  iban: string;
-  currency: string;
-  ownerName: string;
-  name: string;
-  product: string;
   cashAccountType: string;
-  status: "enabled" | "deleted" | "blocked";
-  bic: string;
+  bankCode: string;
+  product: string;
+  accountReference: {
+    iban: string;
+    currency: string;
+  };
+  displayName: string;
   usage: "PRIV" | "ORGA";
+  bankName: string;
+  consentExpirationDate: string;
+  dateUpdated: string;
+  accountId: string;
   balances: Balance[];
+  name: string;
+  bic: string;
+  status: "enabled" | "deleted" | "blocked";
 }
 
 export interface Balance {
