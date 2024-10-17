@@ -1,0 +1,28 @@
+{
+  "name": "tatra-premium-api-sdk",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "homepage": "https://github.com/dzusooo/tatra-premium-api-sdk",
+  "keywords": [
+    "tatra",
+    "banka",
+    "premium",
+    "api",
+    "sdk"
+  ],
+  "author": "Kristián Hvasta",
+  "license": "MIT",
+  "description": "Unofficial SDK for Tatra Banka Premium API",
+  "dependencies": {
+    "ky": "^1.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.6",
+    "typescript": "^5.6.3"
+  }
+}
