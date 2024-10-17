@@ -5,11 +5,8 @@ class ConsentsService {
     constructor(client) {
         this.client = client;
     }
-    async createConsent(access) {
-        return this.client
-            .getKyInstance()
-            .post("v3/consents", { json: { access } })
-            .json();
+    async createConsent() {
+        return this.client.getKyInstance().post("v3/consents").json();
     }
     async getConsentStatus(consentId) {
         const response = await this.client

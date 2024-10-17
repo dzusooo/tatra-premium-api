@@ -4,15 +4,8 @@ import { Consent } from "./types";
 export class ConsentsService {
   constructor(private client: TatraPremiumApiClient) {}
 
-  async createConsent(access: {
-    accounts: string[];
-    balances: string[];
-    transactions: string[];
-  }): Promise<Consent> {
-    return this.client
-      .getKyInstance()
-      .post("v3/consents", { json: { access } })
-      .json<Consent>();
+  async createConsent(): Promise<Consent> {
+    return this.client.getKyInstance().post("v3/consents").json<Consent>();
   }
 
   async getConsentStatus(consentId: string): Promise<string> {
