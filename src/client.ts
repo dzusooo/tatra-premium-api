@@ -32,11 +32,8 @@ export class TatraPremiumApiClient {
           async (request) => {
             await this.ensureValidToken();
 
-            // @ts-expect-error - TS doesn't know about set method
-            request.headers.set("x-request-id", randomUUID());
-
-            // @ts-expect-error - TS doesn't know about set method
-            request.headers.set("Authorization", `Bearer ${this.accessToken}`);
+            request.headers["x-request-id"] = randomUUID();
+            request.headers["Authorization"] = `Bearer ${this.accessToken}`;
           },
         ],
       },
