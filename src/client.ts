@@ -137,7 +137,8 @@ export class TatraPremiumApiClient {
 
   public async exchangeAuthorizationCode(
     code: string,
-    codeVerifier: string
+    codeVerifier: string,
+    consentId?: string
   ): Promise<{
     accessToken: string;
     refreshToken: string;
@@ -156,7 +157,7 @@ export class TatraPremiumApiClient {
           code: code,
           grant_type: "authorization_code",
           redirect_uri: this.redirectUri,
-          scope: "PREMIUM_AIS",
+          scope: consentId ? `PREMIUM_AIS:${consentId}` : "PREMIUM_AIS",
           code_verifier: codeVerifier,
         },
       })

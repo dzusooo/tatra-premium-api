@@ -102,7 +102,7 @@ class TatraPremiumApiClient {
             .replace(/\//g, "_")
             .replace(/=/g, "");
     }
-    async exchangeAuthorizationCode(code, codeVerifier) {
+    async exchangeAuthorizationCode(code, codeVerifier, consentId) {
         const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;
         const response = await got_1.default
             .post(tokenUrl, {
@@ -114,7 +114,7 @@ class TatraPremiumApiClient {
                 code: code,
                 grant_type: "authorization_code",
                 redirect_uri: this.redirectUri,
-                scope: "PREMIUM_AIS",
+                scope: consentId ? `PREMIUM_AIS:${consentId}` : "PREMIUM_AIS",
                 code_verifier: codeVerifier,
             },
         })
