@@ -7,16 +7,18 @@ exports.TatraPremiumApiClient = void 0;
 const ky_1 = __importDefault(require("ky"));
 const crypto_1 = require("crypto");
 class TatraPremiumApiClient {
-    constructor(baseURL, clientId, clientSecret, redirectUri) {
+    constructor(clientId, clientSecret, redirectUri, useSandbox = false) {
         this.accessToken = null;
         this.refreshToken = null;
         this.tokenExpiresAt = null;
-        this.baseURL = baseURL;
+        this.baseURL = useSandbox
+            ? "https://api.tatrabanka.sk/premium/sandbox"
+            : "https://api.tatrabanka.sk/premium/production";
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
         this.kyInstance = ky_1.default.create({
-            prefixUrl: baseURL,
+            prefixUrl: this.baseURL,
             hooks: {
                 beforeRequest: [
                     async (request) => {

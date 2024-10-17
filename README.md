@@ -33,10 +33,10 @@ To use the SDK, you'll need to create an instance of `TatraPremiumApiClient` wit
 import { TatraPremiumApiClient } from "tatra-premium-api-sdk";
 
 const client = new TatraPremiumApiClient(
-  "https://api.tatrabanka.sk/premium/production", // or sandbox URL
   "your-client-id",
   "your-client-secret",
-  "https://your-app.com/callback" // only needed for authorization code grant flow
+  "https://your-app.com/callback" // only needed for authorization code grant flow,
+  true // enable Sandbox mode
 );
 ```
 
@@ -50,10 +50,10 @@ For server-to-server communication, you can use the client credentials flow:
 import { TatraPremiumApiClient, AccountsService } from "tatra-premium-api-sdk";
 
 const client = new TatraPremiumApiClient(
-  "https://api.tatrabanka.sk/premium/production",
   "your-client-id",
   "your-client-secret",
-  "https://your-app.com/callback"
+  "https://your-app.com/callback",
+  true // enable Sandbox mode
 );
 
 const accountsService = new AccountsService(client);
@@ -79,10 +79,10 @@ import { TatraPremiumApiClient, AccountsService } from "tatra-premium-api-sdk";
 import crypto from "crypto";
 
 const client = new TatraPremiumApiClient(
-  "https://api.tatrabanka.sk/premium/production",
   "your-client-id",
   "your-client-secret",
-  "https://your-app.com/callback"
+  "https://your-app.com/callback",
+  true // enable Sandbox mode
 );
 
 // Generate a code verifier

@@ -12,17 +12,19 @@ export class TatraPremiumApiClient {
   private tokenExpiresAt: number | null = null;
 
   constructor(
-    baseURL: string,
     clientId: string,
     clientSecret: string,
-    redirectUri: string
+    redirectUri: string,
+    useSandbox = false
   ) {
-    this.baseURL = baseURL;
+    this.baseURL = useSandbox
+      ? "https://api.tatrabanka.sk/premium/sandbox"
+      : "https://api.tatrabanka.sk/premium/production";
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.redirectUri = redirectUri;
     this.kyInstance = ky.create({
-      prefixUrl: baseURL,
+      prefixUrl: this.baseURL,
       hooks: {
         beforeRequest: [
           async (request) => {
