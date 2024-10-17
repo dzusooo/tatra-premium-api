@@ -12,7 +12,7 @@ export declare class TatraPremiumApiClient {
     private ensureValidToken;
     private getClientCredentialsToken;
     private refreshAccessToken;
-    getAuthorizationUrl(state: string, codeVerifier: string): string;
+    getAuthorizationUrl(state: string, codeVerifier: string, consentId?: string): string;
     private generateCodeChallenge;
     exchangeAuthorizationCode(code: string, codeVerifier: string): Promise<void>;
     getGotInstance(): typeof got;

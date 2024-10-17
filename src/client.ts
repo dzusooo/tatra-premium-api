@@ -107,13 +107,17 @@ export class TatraPremiumApiClient {
     this.tokenExpiresAt = Date.now() + response.expires_in * 1000;
   }
 
-  public getAuthorizationUrl(state: string, codeVerifier: string): string {
+  public getAuthorizationUrl(
+    state: string,
+    codeVerifier: string,
+    consentId?: string
+  ): string {
     const codeChallenge = this.generateCodeChallenge(codeVerifier);
     const params = new URLSearchParams({
       client_id: this.clientId,
       response_type: "code",
       redirect_uri: this.redirectUri,
-      scope: "PREMIUM_AIS",
+      scope: consentId ? `PREMIUM_AIS:${consentId}` : "PREMIUM_AIS",
       state: state,
       code_challenge: codeChallenge,
       code_challenge_method: "S256",
