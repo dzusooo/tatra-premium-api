@@ -29,8 +29,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TatraPremiumApiClient = void 0;
 const got_1 = __importDefault(require("got"));
 const crypto_1 = __importStar(require("crypto"));
+const hpagent_1 = require("hpagent");
 class TatraPremiumApiClient {
-    constructor(clientId, clientSecret, redirectUri, useSandbox = false) {
+    constructor(clientId, clientSecret, redirectUri, useSandbox = false, proxyUrl) {
         this.accessToken = null;
         this.refreshToken = null;
         this.tokenExpiresAt = null;
@@ -42,6 +43,15 @@ class TatraPremiumApiClient {
         this.redirectUri = redirectUri;
         this.gotInstance = got_1.default.extend({
             prefixUrl: this.baseURL,
+            agent: {
+                ...(proxyUrl && {
+                    https: new hpagent_1.HttpsProxyAgent({
+                        keepAlive: false,
+                        proxy: proxyUrl,
+                    }),
+                }),
+            },
+            rejectUnauthorized: !proxyUrl,
             hooks: {
                 beforeRequest: [
                     async (request) => {

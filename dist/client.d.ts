@@ -8,7 +8,7 @@ export declare class TatraPremiumApiClient {
     private accessToken;
     private refreshToken;
     private tokenExpiresAt;
-    constructor(clientId: string, clientSecret: string, redirectUri: string, useSandbox?: boolean);
+    constructor(clientId: string, clientSecret: string, redirectUri: string, useSandbox?: boolean, proxyUrl?: string);
     private ensureValidToken;
     private getClientCredentialsToken;
     private refreshAccessToken;

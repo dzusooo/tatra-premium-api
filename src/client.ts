@@ -1,5 +1,6 @@
 import got from "got";
 import crypto, { randomUUID } from "crypto";
+import { HttpsProxyAgent } from "hpagent";
 
 export class TatraPremiumApiClient {
   private gotInstance: typeof got;
@@ -15,7 +16,8 @@ export class TatraPremiumApiClient {
     clientId: string,
     clientSecret: string,
     redirectUri: string,
-    useSandbox = false
+    useSandbox = false,
+    proxyUrl?: string
   ) {
     this.baseURL = useSandbox
       ? "https://api.tatrabanka.sk/premium/sandbox"
@@ -27,6 +29,15 @@ export class TatraPremiumApiClient {
 
     this.gotInstance = got.extend({
       prefixUrl: this.baseURL,
+      agent: {
+        ...(proxyUrl && {
+          https: new HttpsProxyAgent({
+            keepAlive: false,
+            proxy: proxyUrl,
+          }),
+        }),
+      },
+      rejectUnauthorized: !proxyUrl,
       hooks: {
         beforeRequest: [
           async (request) => {
