@@ -1,11 +1,34 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TatraPremiumApiClient = void 0;
 const got_1 = __importDefault(require("got"));
-const crypto_1 = require("crypto");
+const crypto_1 = __importStar(require("crypto"));
 class TatraPremiumApiClient {
     constructor(clientId, clientSecret, redirectUri, useSandbox = false) {
         this.accessToken = null;
@@ -81,8 +104,8 @@ class TatraPremiumApiClient {
         this.refreshToken = response.refresh_token;
         this.tokenExpiresAt = Date.now() + response.expires_in * 1000;
     }
-    getAuthorizationUrl(state, codeVerifier, consentId) {
-        const codeChallenge = this.generateCodeChallenge(codeVerifier);
+    async getAuthorizationUrl(state, codeVerifier, consentId) {
+        const codeChallenge = await this.generateCodeChallenge(codeVerifier);
         const params = new URLSearchParams({
             client_id: this.clientId,
             response_type: "code",
@@ -94,13 +117,23 @@ class TatraPremiumApiClient {
         });
         return `${this.baseURL}/auth/oauth/v2/authorize?${params.toString()}`;
     }
-    generateCodeChallenge(codeVerifier) {
-        const hash = (0, crypto_1.createHash)("sha256").update(codeVerifier).digest();
-        return hash
-            .toString("base64")
-            .replace(/\+/g, "-")
+    async generateCodeChallenge(codeVerifier) {
+        const buffer = await crypto_1.default.subtle.digest("SHA-256", new TextEncoder().encode(codeVerifier));
+        return btoa(String.fromCharCode(...new Uint8Array(buffer)))
             .replace(/\//g, "_")
+            .replace(/\+/g, "-")
             .replace(/=/g, "");
+    }
+    generateCodeVerifier(size = 64) {
+        const mask = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
+        let result = "";
+        const randomUints = crypto_1.default.getRandomValues(new Uint8Array(size));
+        for (let i = 0; i < size; i++) {
+            // cap the value of the randomIndex to mask.length - 1
+            const randomIndex = randomUints[i] % mask.length;
+            result += mask[randomIndex];
+        }
+        return result;
     }
     async exchangeAuthorizationCode(code, codeVerifier, consentId) {
         const tokenUrl = `${this.baseURL}/auth/oauth/v2/token`;

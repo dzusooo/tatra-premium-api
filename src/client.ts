@@ -1,5 +1,5 @@
 import got from "got";
-import { createHash, randomUUID } from "crypto";
+import crypto, { randomUUID } from "crypto";
 
 export class TatraPremiumApiClient {
   private gotInstance: typeof got;
@@ -107,12 +107,12 @@ export class TatraPremiumApiClient {
     this.tokenExpiresAt = Date.now() + response.expires_in * 1000;
   }
 
-  public getAuthorizationUrl(
+  public async getAuthorizationUrl(
     state: string,
     codeVerifier: string,
     consentId?: string
-  ): string {
-    const codeChallenge = this.generateCodeChallenge(codeVerifier);
+  ): Promise<string> {
+    const codeChallenge = await this.generateCodeChallenge(codeVerifier);
     const params = new URLSearchParams({
       client_id: this.clientId,
       response_type: "code",
@@ -126,13 +126,29 @@ export class TatraPremiumApiClient {
     return `${this.baseURL}/auth/oauth/v2/authorize?${params.toString()}`;
   }
 
-  private generateCodeChallenge(codeVerifier: string): string {
-    const hash = createHash("sha256").update(codeVerifier).digest();
-    return hash
-      .toString("base64")
-      .replace(/\+/g, "-")
+  private async generateCodeChallenge(codeVerifier: string): Promise<string> {
+    const buffer = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(codeVerifier)
+    );
+
+    return btoa(String.fromCharCode(...new Uint8Array(buffer)))
       .replace(/\//g, "_")
+      .replace(/\+/g, "-")
       .replace(/=/g, "");
+  }
+
+  public generateCodeVerifier(size: number = 64): string {
+    const mask =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~";
+    let result = "";
+    const randomUints = crypto.getRandomValues(new Uint8Array(size));
+    for (let i = 0; i < size; i++) {
+      // cap the value of the randomIndex to mask.length - 1
+      const randomIndex = randomUints[i] % mask.length;
+      result += mask[randomIndex];
+    }
+    return result;
   }
 
   public async exchangeAuthorizationCode(
