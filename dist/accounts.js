@@ -26,7 +26,7 @@ class AccountsService {
             .json();
         return response.balances;
     }
-    async getAccountTransactions(accountIds, dateFrom, dateTo) {
+    async getAccountTransactions(accountIds, dateFrom, dateTo, page = 1, pageSize = 50) {
         if (typeof accountIds === "string") {
             accountIds = [accountIds];
         }
@@ -38,12 +38,14 @@ class AccountsService {
                 searchParams: {
                     ...(dateFrom && { dateFrom }),
                     ...(dateTo && { dateTo }),
+                    page,
+                    pageSize,
                 },
             })
                 .json();
             transactions.push(...response.transactions);
         }
-        return transactions;
+        return transactions.sort((a, b) => Date.parse(b.bookingDate) - Date.parse(a.bookingDate));
     }
 }
 exports.AccountsService = AccountsService;

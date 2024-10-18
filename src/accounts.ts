@@ -31,7 +31,9 @@ export class AccountsService {
   async getAccountTransactions(
     accountIds: string | string[],
     dateFrom?: string,
-    dateTo?: string
+    dateTo?: string,
+    page: number = 1,
+    pageSize: number = 50
   ): Promise<Transaction[]> {
     if (typeof accountIds === "string") {
       accountIds = [accountIds];
@@ -46,6 +48,8 @@ export class AccountsService {
           searchParams: {
             ...(dateFrom && { dateFrom }),
             ...(dateTo && { dateTo }),
+            page,
+            pageSize,
           },
         })
         .json<{ transactions: Transaction[] }>();
@@ -53,6 +57,8 @@ export class AccountsService {
       transactions.push(...response.transactions);
     }
 
-    return transactions;
+    return transactions.sort(
+      (a, b) => Date.parse(b.bookingDate) - Date.parse(a.bookingDate)
+    );
   }
 }
