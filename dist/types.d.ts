@@ -27,6 +27,12 @@ export interface Balance {
 }
 export interface Transaction {
     transactionId: string;
+    originalTransactionId: string;
+    transactionState: string;
+    endToEndId: string;
+    variableSymbol: string;
+    constantSymbol: string;
+    specificSymbol: string;
     bookingDate: string;
     valueDate: string;
     transactionAmount: {
@@ -34,8 +40,37 @@ export interface Transaction {
         amount: number;
     };
     creditorName: string;
+    creditorAccount: {
+        iban: string;
+        currency: string;
+    };
+    creditorAgent: {
+        bic: string;
+    };
     debtorName: string;
+    debtorAccount: {
+        iban: string;
+        currency: string;
+    };
+    debtorAgent: {
+        bic: string;
+    };
     remittanceInformationUnstructured: string;
+    additionalInformation: string;
+    bankTransactionCode: string;
+    cardNumber: string;
+    tradingPartyAddress: string;
+    tradingPartyIdentification: string;
+    tradingPartyMerchantCode: string;
+    originalAmount: {
+        currency: string;
+        amount: number;
+    };
+    authorizationDate: string;
+    cardHolder: string;
+    isReversal: boolean;
+    paymentReference: string;
+    transactionComplete: boolean;
 }
 export interface Consent {
     consentStatus: string;
