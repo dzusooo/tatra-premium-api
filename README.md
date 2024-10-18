@@ -123,7 +123,7 @@ const balances = await accountsService.getAccountBalances("account-id");
 
 // Get transactions for a specific account
 const transactions = await accountsService.getAccountTransactions(
-  "account-id",
+  "account-id", // or ["account-id-1", "account-id-2"]
   "2023-01-01",
   "2023-12-31"
 );

@@ -6,5 +6,5 @@ export declare class AccountsService {
     getAccounts(): Promise<Account[]>;
     getAccountDetails(accountId: string): Promise<Account>;
     getAccountBalances(accountId: string): Promise<Balance[]>;
-    getAccountTransactions(accountId: string, dateFrom?: string, dateTo?: string): Promise<Transaction[]>;
+    getAccountTransactions(accountIds: string | string[], dateFrom?: string, dateTo?: string): Promise<Transaction[]>;
 }

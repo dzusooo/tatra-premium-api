@@ -26,17 +26,24 @@ class AccountsService {
             .json();
         return response.balances;
     }
-    async getAccountTransactions(accountId, dateFrom, dateTo) {
-        const response = await this.client
-            .getGotInstance()
-            .get(`v5/accounts/${accountId}/transactions`, {
-            searchParams: {
-                ...(dateFrom && { dateFrom }),
-                ...(dateTo && { dateTo }),
-            },
-        })
-            .json();
-        return response.transactions;
+    async getAccountTransactions(accountIds, dateFrom, dateTo) {
+        if (typeof accountIds === "string") {
+            accountIds = [accountIds];
+        }
+        const transactions = [];
+        for (const id of accountIds) {
+            const response = await this.client
+                .getGotInstance()
+                .get(`v5/accounts/${id}/transactions`, {
+                searchParams: {
+                    ...(dateFrom && { dateFrom }),
+                    ...(dateTo && { dateTo }),
+                },
+            })
+                .json();
+            transactions.push(...response.transactions);
+        }
+        return transactions;
     }
 }
 exports.AccountsService = AccountsService;

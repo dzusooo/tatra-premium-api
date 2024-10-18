@@ -29,19 +29,30 @@ export class AccountsService {
   }
 
   async getAccountTransactions(
-    accountId: string,
+    accountIds: string | string[],
     dateFrom?: string,
     dateTo?: string
   ): Promise<Transaction[]> {
-    const response = await this.client
-      .getGotInstance()
-      .get(`v5/accounts/${accountId}/transactions`, {
-        searchParams: {
-          ...(dateFrom && { dateFrom }),
-          ...(dateTo && { dateTo }),
-        },
-      })
-      .json<{ transactions: Transaction[] }>();
-    return response.transactions;
+    if (typeof accountIds === "string") {
+      accountIds = [accountIds];
+    }
+
+    const transactions: Transaction[] = [];
+
+    for (const id of accountIds) {
+      const response = await this.client
+        .getGotInstance()
+        .get(`v5/accounts/${id}/transactions`, {
+          searchParams: {
+            ...(dateFrom && { dateFrom }),
+            ...(dateTo && { dateTo }),
+          },
+        })
+        .json<{ transactions: Transaction[] }>();
+
+      transactions.push(...response.transactions);
+    }
+
+    return transactions;
   }
 }
